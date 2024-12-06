@@ -34,7 +34,7 @@ export default function EditFacilityPage() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyAjfDfEoYLwPxFCUZ2VWUku152SV0nxAr4',
+    googleMapsApiKey: '',
     libraries: ['places'],
   });
 

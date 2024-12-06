@@ -29,7 +29,7 @@ export default function Page() {
   const agencyId = localStorage.getItem('agencyId');
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyAjfDfEoYLwPxFCUZ2VWUku152SV0nxAr4',
+    googleMapsApiKey: '',
     libraries: ['places'],
   });
 

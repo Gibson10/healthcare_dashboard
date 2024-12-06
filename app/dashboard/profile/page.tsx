@@ -15,7 +15,7 @@ export default function UpdateProfilePage() {
   });
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyAjfDfEoYLwPxFCUZ2VWUku152SV0nxAr4',
+    googleMapsApiKey: '',
     libraries: ['places'],
   });
   const [loading, setLoading] = useState(false);
