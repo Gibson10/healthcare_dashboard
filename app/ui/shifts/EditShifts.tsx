@@ -51,7 +51,10 @@ const EditShiftModal: React.FC<EditShiftModalProps> = ({
     const { name, value } = e.target;
     setUpdatedShiftData({
       ...updatedShiftData,
-      [name]: name === 'caregiversNeeded' || name === 'basePrice' ? Number(value) : value,
+      [name]:
+        name === 'caregiversNeeded' || name === 'basePrice'
+          ? Number(value)
+          : value,
     });
   };
 

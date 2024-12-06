@@ -49,6 +49,7 @@ interface Facility {
   description?: string; // Optional field for description
 
   agencyId: string; // Required to link the facility to an agency
+  _id: string;
 }
 
 export const createShift = async (
@@ -118,7 +119,7 @@ export const fetchShifts = async (agencyId: string): Promise<Shift[]> => {
 // src/api/shifts.ts
 
 export const updateShift = async (
-  shiftId: string,
+  shiftId: string | undefined,
   updatedShiftData: any,
 ): Promise<void> => {
   const token = localStorage.getItem('token'); // Get the auth token from localStorage
