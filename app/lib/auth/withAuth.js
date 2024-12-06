@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'; // Use next/navigation instead of n
 import { useEffect, useState } from 'react';
 
 const withAuth = (WrappedComponent) => {
-  return (props) => {
+  const AuthenticatedComponent = (props) => {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -23,6 +23,16 @@ const withAuth = (WrappedComponent) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  // Assign a display name for easier debugging
+  AuthenticatedComponent.displayName = `withAuth(${getDisplayName(WrappedComponent)})`;
+
+  return AuthenticatedComponent;
+};
+
+// Helper function to determine the display name of the wrapped component
+const getDisplayName = (WrappedComponent) => {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 };
 
 export default withAuth;
