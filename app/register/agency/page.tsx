@@ -1,6 +1,6 @@
 'use client'; // Mark this layout as a client component
 
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerAgencyAdmin } from '../../api/auth';
 
@@ -19,11 +19,13 @@ export default function RegisterAgencyPage() {
     agencyAddress: '',
   });
 
+  const [personalInfo, setPersonalInfo] = useState<any>({});
+
   const router = useRouter();
 
   // Retrieve personal information from local storage
-  const personalInfo = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-
+  // const personalInfo = JSON.parse(localStorage.getItem('personalInfo') || '{}');
+  //
   // Handle form input changes
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setAgencyInfo({
@@ -46,6 +48,13 @@ export default function RegisterAgencyPage() {
       console.error('Registration failed:', error);
     }
   };
+
+  useEffect(() => {
+    const storedPersonalInfo = localStorage.getItem('personalInfo');
+    if (storedPersonalInfo) {
+      setPersonalInfo(JSON.parse(storedPersonalInfo));
+    }
+  }, []);
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
