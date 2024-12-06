@@ -29,6 +29,28 @@ export interface CreateShiftDto {
   nurseType: string[]; // Array of required nurse types (CNA, RN, etc.)
 }
 
+interface Facility {
+  name: string;
+
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+
+  textLocation: string; // Full address in string format
+
+  picture?: string;
+
+  email: string;
+  phone: string;
+
+  buildingName?: string; // Optional field for building name
+  floor?: string; // Optional field for floor
+  description?: string; // Optional field for description
+
+  agencyId: string; // Required to link the facility to an agency
+}
+
 export const createShift = async (
   shiftData: CreateShiftDto,
 ): Promise<Shift> => {
