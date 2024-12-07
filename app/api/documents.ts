@@ -8,17 +8,14 @@ export const createDocument = async (documentData: any) => {
   }
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/documents`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Bearer token for authentication
-        },
-        body: JSON.stringify(documentData), // Send the document data as JSON
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/documents`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Bearer token for authentication
       },
-    );
+      body: JSON.stringify(documentData), // Send the document data as JSON
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -44,7 +41,7 @@ export const getDocuments = async (agencyId: string) => {
   console.log('agencyId', agencyId);
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/documents/agency/${agencyId}`,
+      `${process.env.NEXT_PUBLIC_URL}/documents/agency/${agencyId}`,
       {
         method: 'GET',
         headers: {
@@ -77,7 +74,7 @@ export const patchDocument = async (
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/documents/${documentId}`,
+      `${process.env.NEXT_PUBLIC_URL}/documents/${documentId}`,
       {
         method: 'PATCH',
         headers: {
@@ -110,7 +107,7 @@ export const updateDocumentStatus = async (
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/caregiverdocuments/status/${caregiverId}/${documentTypeId}`,
+      `${process.env.NEXT_PUBLIC_URL}/caregiverdocuments/status/${caregiverId}/${documentTypeId}`,
       {
         method: 'PATCH', // Use the PATCH method
         headers: {

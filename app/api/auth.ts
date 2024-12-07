@@ -6,7 +6,7 @@ export const login = async (email: string, password: string) => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/auth/login/agency-admin`,
+      `${process.env.NEXT_PUBLIC_URL}/auth/login/agency-admin`,
       {
         method: 'POST',
         headers: {
@@ -33,7 +33,7 @@ export const login = async (email: string, password: string) => {
 export const registerAgencyAdmin = async (formData: any) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/auth/register/agency-admin`,
+      `${process.env.NEXT_PUBLIC_URL}/auth/register/agency-admin`,
       {
         method: 'POST',
         headers: {

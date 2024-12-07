@@ -63,7 +63,7 @@ export const createShift = async (
   }
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_URL}/shifts`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/shifts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export const fetchShifts = async (agencyId: string): Promise<Shift[]> => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/shifts/agency/${agencyId}`,
+      `${process.env.NEXT_PUBLIC_URL}/shifts/agency/${agencyId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -129,7 +129,7 @@ export const updateShift = async (
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/shifts/${shiftId}`,
+      `${process.env.NEXT_PUBLIC_URL}/shifts/${shiftId}`,
       {
         method: 'PATCH',
         headers: {

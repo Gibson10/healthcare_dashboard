@@ -3,7 +3,7 @@ export const fetchAgencyAnalytics = async (agencyId: string) => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/agencies/${agencyId}/analytics`,
+      `${process.env.NEXT_PUBLIC_URL}/agencies/${agencyId}/analytics`,
       {
         headers: {
           Authorization: `Bearer ${token}`, // Attach Bearer token in the request header

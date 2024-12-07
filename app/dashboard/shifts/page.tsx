@@ -373,7 +373,7 @@ export default function Page() {
               {/* Base Price */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Base Price
+                  Base Pay
                 </label>
                 <input
                   type="number"

@@ -3,7 +3,7 @@ export const updateProfile = async (id: string, profileData: any) => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/agencies/${id}`,
+      `${process.env.NEXT_PUBLIC_URL}/agencies/${id}`,
       {
         method: 'PATCH',
         headers: {
@@ -30,7 +30,7 @@ export const fetchAgencyProfile = async (agencyId: string) => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/agencies/${agencyId}`,
+      `${process.env.NEXT_PUBLIC_URL}/agencies/${agencyId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`, // Attach the Bearer token in the request header

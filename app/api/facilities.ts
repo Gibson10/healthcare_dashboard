@@ -47,16 +47,13 @@ export const createFacility = async (
   }
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/facilities`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`, // Add the Bearer token to the header
-        },
-        body: formData, // Send formData
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/facilities`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`, // Add the Bearer token to the header
       },
-    );
+      body: formData, // Send formData
+    });
 
     if (response.ok) {
       return await response.json(); // Return the created facility response
@@ -74,7 +71,7 @@ export const fetchFacilities = async (agencyId: string) => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/facilities/agency/${agencyId}`,
+      `${process.env.NEXT_PUBLIC_URL}/facilities/agency/${agencyId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`, // Add the Bearer token to the header
@@ -104,7 +101,7 @@ export const fetchFacilityById = async (facilityId: string): Promise<any> => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/facilities/${facilityId}`,
+      `${process.env.NEXT_PUBLIC_URL}/facilities/${facilityId}`,
       {
         method: 'GET',
         headers: {
@@ -156,7 +153,7 @@ export const updateFacility = async (
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_URL}/facilities/${facilityId}`,
+      `${process.env.NEXT_PUBLIC_URL}/facilities/${facilityId}`,
       {
         method: 'PATCH',
         headers: {
