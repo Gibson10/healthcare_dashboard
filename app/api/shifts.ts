@@ -13,8 +13,13 @@ export interface Shift {
   nurseType: string[];
   createdAt: string;
   updatedAt: string;
+  basePriceByNurseType: NursePayRate[];
 }
 
+type NursePayRate = {
+  nurseType: string;
+  payRate: number;
+};
 export interface CreateShiftDto {
   title: string;
   facilityId: string;
@@ -27,6 +32,7 @@ export interface CreateShiftDto {
   // New fields
   caregiversNeeded: number; // Required number of caregivers for the shift
   nurseType: string[]; // Array of required nurse types (CNA, RN, etc.)
+  basePriceByNurseType: NursePayRate[];
 }
 
 interface Facility {
@@ -146,6 +152,68 @@ export const updateShift = async (
     }
   } catch (error) {
     console.error('Error updating shift:', error);
+    throw error;
+  }
+};
+
+export const fetchShiftsByFacility = async (
+  facilityId: string,
+): Promise<Shift[]> => {
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  if (!token) {
+    throw new Error('Authentication token not found. Please log in.');
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/shifts/facility/${facilityId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (response.ok) {
+      const data: Shift[] = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error fetching shifts by facility');
+    }
+  } catch (error) {
+    console.error('Error fetching shifts by facility:', error);
+    throw error;
+  }
+};
+
+export const deleteShift = async (shiftId: string): Promise<void> => {
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  if (!token) {
+    throw new Error('Authentication token not found. Please log in.');
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/shifts/${shiftId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error deleting shift');
+    }
+  } catch (error) {
+    console.error('Error:', error);
     throw error;
   }
 };

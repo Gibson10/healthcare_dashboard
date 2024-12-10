@@ -44,3 +44,31 @@ input[type='number']::-webkit-outer-spin-button {
 .zoomable-content:hover iframe {
   transform: scale(1.5); /* Zoom effect */
 }
+
+
+.facility-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.image-container {
+  flex: 1; /* Adjust width of the image */
+  max-width: 500px;
+}
+
+.facility-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.map-container {
+  flex: 1; /* Adjust width of the map */
+  max-width: 500px;
+  height: 400px; /* Set a consistent height for the map */
+}

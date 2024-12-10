@@ -6,6 +6,12 @@ import { fetchShifts, createShift, Shift } from '../../api/shifts';
 import EditShiftModal from '../../ui/shifts/EditShifts';
 import ViewShiftDetailsModal from '../../ui/shifts/ViewShiftModelDetails';
 import { toast, ToastContainer } from 'react-toastify';
+import ShiftsTable from '@/app/ui/shifts/ShiftsTable';
+
+type NursePayRate = {
+  nurseType: string;
+  payRate: number;
+};
 
 type ShiftData = {
   title: string;
@@ -17,8 +23,8 @@ type ShiftData = {
   caregiversNeeded: number;
   nurseType: string[];
   basePrice: number;
+  basePriceByNurseType: NursePayRate[]; // Array of { nurseType, payRate }
 };
-
 export default function Page() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
@@ -35,7 +41,9 @@ export default function Page() {
     caregiversNeeded: 0,
     nurseType: [],
     basePrice: 0,
+    basePriceByNurseType: [], // Array of { nurseType, payRate }
   });
+
   const [shiftDetails, setShiftDetails] = useState({
     shiftTitle: '',
     assignedCaregivers: [] as any[],
@@ -80,6 +88,28 @@ export default function Page() {
     setIsShiftDetailsModalOpen(true);
   };
 
+  const handlePayRateChange = (nurseType: string, payRate: number) => {
+    setShiftData((prevData) => {
+      const updatedBasePriceByNurseType = [...prevData.basePriceByNurseType];
+      const existingEntryIndex = updatedBasePriceByNurseType.findIndex(
+        (entry) => entry.nurseType === nurseType,
+      );
+
+      if (existingEntryIndex >= 0) {
+        // Update existing nurse type pay rate
+        updatedBasePriceByNurseType[existingEntryIndex].payRate = payRate;
+      } else {
+        // Add new nurse type pay rate
+        updatedBasePriceByNurseType.push({ nurseType, payRate });
+      }
+
+      return {
+        ...prevData,
+        basePriceByNurseType: updatedBasePriceByNurseType,
+      };
+    });
+  };
+
   // Handle input changes in shift form
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -110,14 +140,18 @@ export default function Page() {
       const combinedEndTime = new Date(
         `${shiftData.date}T${shiftData.endTime}`,
       );
+
       const shiftToSubmit = {
         ...shiftData,
         date: new Date(shiftData.date), // Convert date to Date object
         startTime: combinedStartTime,
         endTime: combinedEndTime,
         caregiversNeeded: Number(shiftData.caregiversNeeded),
-        basePrice: Number(shiftData.basePrice),
+        basePriceByNurseType: shiftData.basePriceByNurseType.filter(
+          (entry) => entry.payRate > 0,
+        ),
       };
+      console.log('shiftToSubmit', shiftToSubmit);
       await createShift(shiftToSubmit);
       toast.success('Shift Created Successfully!', {
         position: 'top-right',
@@ -159,75 +193,11 @@ export default function Page() {
     }
 
     return (
-      <div className="overflow-x-auto rounded-lg bg-white shadow-md">
-        <table className="min-w-full leading-normal">
-          <thead>
-            <tr>
-              <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                ID
-              </th>
-              <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                Facility
-              </th>
-              <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                Starting On
-              </th>
-              <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                Status
-              </th>
-              <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredShifts.map((shift, index) => (
-              <tr key={shift._id}>
-                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                  {index + 1}
-                </td>
-                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                  {shift.facilityId?.name}
-                </td>
-                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                  {new Date(shift.date).toLocaleDateString()}{' '}
-                  {new Date(shift.startTime).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                  })}{' '}
-                  -{' '}
-                  {new Date(shift.endTime).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                  })}
-                </td>
-                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                  {shift.status}
-                </td>
-                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                  <button
-                    onClick={() => openEditModal(shift)}
-                    className="mr-2 text-blue-600 hover:text-blue-900"
-                  >
-                    Edit
-                  </button>
-                  <button className="text-red-600 hover:text-red-900">
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => openDetailsModal(shift)}
-                    className="ml-2 text-blue-600 hover:text-blue-900"
-                  >
-                    View
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ShiftsTable
+        shifts={shifts}
+        facilities={facilities}
+        onReload={() => window.location.reload()}
+      />
     );
   };
 
@@ -373,20 +343,6 @@ export default function Page() {
               {/* Base Price */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Base Pay
-                </label>
-                <input
-                  type="number"
-                  name="basePrice"
-                  value={shiftData.basePrice}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
-              </div>
-
-              {/* Caregivers Needed */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
                   Caregivers Needed
                 </label>
                 <input
@@ -397,6 +353,34 @@ export default function Page() {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Pay Rates
+                </label>
+                {['RN', 'CNA', 'LPN'].map((type) => (
+                  <div key={type} className="mt-2 flex items-center space-x-4">
+                    <label className="block w-1/3 text-sm font-medium text-gray-700">
+                      {type}
+                    </label>
+                    <input
+                      type="number"
+                      name={`payRate_${type}`}
+                      placeholder={`Pay rate for ${type}`}
+                      value={
+                        shiftData.basePriceByNurseType.find(
+                          (entry) => entry.nurseType === type,
+                        )?.payRate || ''
+                      }
+                      onChange={(e) =>
+                        handlePayRateChange(type, parseFloat(e.target.value))
+                      }
+                      className="mt-1 block w-2/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Caregivers Needed */}
 
               {/* Nurse Type Selection */}
               <div>
@@ -412,7 +396,6 @@ export default function Page() {
                 >
                   <option value="RN">Registered Nurse</option>
                   <option value="CNA">Certified Nursing Assistant</option>
-                  <option value="HHA">Home Healthcare Assistant</option>
                   <option value="LPN">Licensed Practical Nurse</option>
                 </select>
               </div>

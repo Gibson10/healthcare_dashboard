@@ -29,7 +29,7 @@ export default function Page() {
   const agencyId = localStorage.getItem('agencyId');
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: '',
+    googleMapsApiKey: 'AIzaSyAjfDfEoYLwPxFCUZ2VWUku152SV0nxAr4',
     libraries: ['places'],
   });
 
@@ -53,6 +53,28 @@ export default function Page() {
 
   // Submit the form
   const handleSubmit = async () => {
+    // Validate required fields
+    if (
+      !facilityName.trim() ||
+      !textLocation.trim() ||
+      !telephone.trim() ||
+      !email.trim() ||
+      !description.trim() ||
+      !location.latitude ||
+      !location.longitude
+    ) {
+      toast.error('Please fill out all required fields.', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+
     const agencyId = localStorage.getItem('agencyId');
     setLoading(true);
 
@@ -109,7 +131,7 @@ export default function Page() {
             htmlFor="facility-name"
             className="block text-sm font-medium text-gray-700"
           >
-            Name
+            Name *
           </label>
           <input
             type="text"
@@ -125,7 +147,7 @@ export default function Page() {
             htmlFor="location"
             className="block text-sm font-medium text-gray-700"
           >
-            Location
+            Location *
           </label>
           <PlacesAutocomplete
             value={textLocation}
@@ -173,7 +195,7 @@ export default function Page() {
             htmlFor="telephone"
             className="block text-sm font-medium text-gray-700"
           >
-            Telephone
+            Telephone *
           </label>
           <input
             type="text"
@@ -189,7 +211,7 @@ export default function Page() {
             htmlFor="building"
             className="block text-sm font-medium text-gray-700"
           >
-            Email
+            Email *
           </label>
           <input
             type="text"
@@ -238,7 +260,7 @@ export default function Page() {
           htmlFor="description"
           className="block text-sm font-medium text-gray-700"
         >
-          Description
+          Description *
         </label>
         <textarea
           id="description"
@@ -249,7 +271,7 @@ export default function Page() {
         ></textarea>
       </div>
       <div className="mt-6">
-        <h3 className="text-lg font-semibold">Facility Images</h3>
+        <h3 className="text-lg font-semibold">Facility Images *</h3>
         <div
           className="mt-2 cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-4 text-center"
           onClick={() => document.getElementById('fileInput')?.click()} // Trigger click on hidden file input
@@ -257,7 +279,7 @@ export default function Page() {
           {selectedImage ? (
             <p>{selectedImage.name}</p> // Display the selected image name
           ) : (
-            <p>Drop files here to upload</p>
+            <p>Drop facility picture here to upload</p>
           )}
         </div>
         <input
@@ -278,26 +300,6 @@ export default function Page() {
           />
         </div>
       )}
-    </div>
-  );
-
-  const renderMap = () => (
-    <div className="p-4">
-      <h3 className="mb-2 text-lg font-semibold">Map for location</h3>
-      <div className="rounded-lg border border-gray-300">
-        <div className="bg-gray-50 p-4 text-center">No location selected</div>
-        {location.latitude && location.longitude && (
-          <GoogleMap
-            center={{ lat: location.latitude, lng: location.longitude }}
-            zoom={15}
-            mapContainerStyle={{ height: '400px', width: '100%' }}
-          >
-            <Marker
-              position={{ lat: location.latitude, lng: location.longitude }}
-            />
-          </GoogleMap>
-        )}
-      </div>
     </div>
   );
 
@@ -331,21 +333,10 @@ export default function Page() {
           >
             Details
           </button>
-          <button
-            onClick={() => setActiveTab('map')}
-            className={`w-1/2 px-1 py-4 text-center text-sm font-medium ${
-              activeTab === 'map'
-                ? 'border-indigo-500 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-            } border-b-2`}
-          >
-            Map for location
-          </button>
         </nav>
       </div>
 
-      {activeTab === 'details' && renderDetailsForm()}
-      {activeTab === 'map' && renderMap()}
+      {renderDetailsForm()}
     </div>
   );
 }

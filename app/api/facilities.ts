@@ -141,10 +141,10 @@ export const updateFacility = async (
   formData.append('name', facilityData.name);
   formData.append('location', JSON.stringify(facilityData.location)); // Convert location object to string
   formData.append('textLocation', facilityData.textLocation);
-  formData.append('telephone', facilityData.telephone);
+  formData.append('telephone', facilityData.phone);
   formData.append('email', facilityData.email);
   formData.append('floor', facilityData.floor);
-  formData.append('building', facilityData.building);
+  formData.append('buildingName', facilityData.buildingName);
   formData.append('description', facilityData.description);
 
   if (selectedImage) {
@@ -172,6 +172,34 @@ export const updateFacility = async (
     return data; // Return updated facility data
   } catch (error) {
     console.error('Error updating facility:', error);
+    throw error;
+  }
+};
+
+export const deleteFacility = async (facilityId: string): Promise<void> => {
+  const token = localStorage.getItem('token'); // Get the Bearer token from localStorage
+
+  if (!token) {
+    throw new Error('Authentication token not found. Please log in.');
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/facilities/${facilityId}`,
+      {
+        method: 'DELETE', // Specify DELETE method
+        headers: {
+          Authorization: `Bearer ${token}`, // Add the Bearer token to the header
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error deleting facility');
+    }
+  } catch (error) {
+    console.error('Error deleting facility:', error);
     throw error;
   }
 };

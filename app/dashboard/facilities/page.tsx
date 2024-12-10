@@ -1,13 +1,16 @@
 'use client'; // Mark this layout as a client component
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { fetchFacilities } from '../../api/facilities'; // Import your fetch function
+import { fetchFacilities, deleteFacility } from '../../api/facilities'; // Import your fetch function
+import DeleteModal from '@/app/ui/modals/DeleteModal';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function Page() {
   const [facilities, setFacilities] = useState<any[]>([]); // State to store fetched facilities
   const [loading, setLoading] = useState<boolean>(true); // State for loading status
   const [error, setError] = useState<string | null>(null); // State for errors
-
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   // Fetch facilities when the component is mounted
   useEffect(() => {
     const getFacilities = async () => {
@@ -30,6 +33,49 @@ export default function Page() {
 
     getFacilities();
   }, []);
+
+  const handleOpenDeleteModal = (id: string) => {
+    setDeleteId(id);
+    setDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteId(null);
+    setDeleteModalOpen(false);
+  };
+
+  // Perform delete action
+  const handleDelete = async () => {
+    try {
+      if (deleteId) {
+        // Call your delete function for facilities or shifts
+        await deleteFacility(deleteId);
+        toast.success('Shift deleted successfully!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting:', error);
+      toast.error('Error deleting the facility, please try again', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      handleCloseDeleteModal();
+    }
+  };
 
   if (loading) {
     return <p>Loading facilities...</p>; // Show loading message
@@ -86,8 +132,13 @@ export default function Page() {
                 <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                   {index + 1}
                 </td>
-                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                  {facility.name}
+                <td className="flex items-center space-x-4 border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                  <img
+                    src={facility.picture || '/placeholder-image.png'} // Default placeholder if no image is provided
+                    alt={`${facility.name} picture`}
+                    className="h-10 w-10 rounded-full object-cover" // Style for rounded image
+                  />
+                  <span>{facility.name}</span>
                 </td>
                 <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                   {facility.phone}
@@ -108,9 +159,17 @@ export default function Page() {
                       Edit
                     </button>
                   </Link>
-                  <button className="text-red-600 hover:text-red-900">
+                  <button
+                    onClick={() => handleOpenDeleteModal(facility._id)}
+                    className="text-red-600 hover:text-red-900"
+                  >
                     Delete
                   </button>
+                  <Link href={`/dashboard/facilities/view/${facility._id}`}>
+                    <button className="ml-3 text-blue-600 hover:text-blue-900">
+                      View
+                    </button>
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -130,6 +189,12 @@ export default function Page() {
           </div>
         </div>
       </div>
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onDelete={handleDelete}
+        message="Are you sure you want to delete this facility?"
+      />
     </div>
   );
 }

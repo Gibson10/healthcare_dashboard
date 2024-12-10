@@ -8,7 +8,7 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 import { useParams } from 'next/navigation';
-
+import ShiftsTable from '@/app/ui/shifts/ShiftsTable';
 import { toast, ToastContainer } from 'react-toastify';
 import { fetchFacilityById, updateFacility } from '../../../../api/index';
 
@@ -34,7 +34,7 @@ export default function EditFacilityPage() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: '',
+    googleMapsApiKey: 'AIzaSyAjfDfEoYLwPxFCUZ2VWUku152SV0nxAr4',
     libraries: ['places'],
   });
 
@@ -72,6 +72,8 @@ export default function EditFacilityPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
+    console.log('name', name);
+    console.log('value', value);
     setFacilityData((prev) => ({
       ...prev,
       [name]: value,
@@ -88,10 +90,26 @@ export default function EditFacilityPage() {
         selectedImage,
       );
 
-      toast.success('Facility updated successfully');
+      toast.success('Facility updated successfully!', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       router.push('/dashboard/facilities');
     } catch (error) {
-      toast.error('Error updating facility');
+      toast.error('Error updating facility, please try again', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } finally {
       setLoading(false);
     }
@@ -182,7 +200,7 @@ export default function EditFacilityPage() {
               </label>
               <input
                 type="text"
-                name="telephone"
+                name="phone"
                 value={facilityData.phone}
                 onChange={handleInputChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
@@ -224,7 +242,7 @@ export default function EditFacilityPage() {
               </label>
               <input
                 type="text"
-                name="building"
+                name="buildingName"
                 value={facilityData.buildingName}
                 onChange={handleInputChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"

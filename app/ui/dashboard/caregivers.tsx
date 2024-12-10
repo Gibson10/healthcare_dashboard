@@ -29,13 +29,13 @@ export default async function CareGivers({
                 )}
               >
                 <div className="flex items-center">
-                  {/* <Image
+                  <Image
                     src="https://png.pngtree.com/png-vector/20191110/ourmid/pngtree-avatar-icon-profile-icon-member-login-vector-isolated-png-image_1978396.jpg"
                     alt={`${caregiver.name}'s profile picture`}
                     className="mr-4 rounded-full"
-                    width={32}
-                    height={32}
-                  /> */}
+                    width={50}
+                    height={50}
+                  />
 
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base">
