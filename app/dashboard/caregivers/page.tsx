@@ -47,6 +47,16 @@ export default function Page() {
     }
   };
 
+  const updateDocumentStatus = (updatedDocument: UploadedDocument) => {
+    setSelectedDocuments((prevDocuments) =>
+      prevDocuments.map((doc) =>
+        doc._id === updatedDocument._id
+          ? { ...doc, status: updatedDocument.status }
+          : doc,
+      ),
+    );
+  };
+
   // Categorize caregivers based on the active tab
   const getFilteredCaregivers = () => {
     if (activeTab === 'verify-documents') {
@@ -186,6 +196,7 @@ export default function Page() {
         onClose={() => setIsModalOpen(false)}
         documents={selectedDocuments}
         careGiverId={careGiverId}
+        onUpdateDocument={updateDocumentStatus} // Pass the callback
       />
     </div>
   );

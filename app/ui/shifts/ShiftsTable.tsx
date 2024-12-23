@@ -4,6 +4,7 @@ import ViewShiftDetailsModal from '../../ui/shifts/ViewShiftModelDetails';
 import { Shift, deleteShift } from '../../api/shifts';
 import DeleteModal from '../modals/DeleteModal';
 import { toast, ToastContainer } from 'react-toastify';
+import Link from 'next/link';
 
 type Facility = {
   _id: string;
@@ -197,12 +198,11 @@ const ShiftsTable: React.FC<ShiftsTableProps> = ({
                 >
                   Edit
                 </button>
-                <button
-                  onClick={() => handleViewShiftDetails(shift)}
-                  className="ml-2 text-blue-600 hover:text-blue-900"
-                >
-                  View
-                </button>
+                <Link href={`/dashboard/shifts/view/${shift._id}`}>
+                  <button className="ml-2 text-blue-600 hover:text-blue-900">
+                    View
+                  </button>
+                </Link>
                 <button
                   onClick={() => handleOpenDeleteModal(shift._id)}
                   className="ml-4 text-red-600 hover:text-red-900"

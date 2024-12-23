@@ -199,10 +199,9 @@ export default function DocumentsPage() {
                   onChange={handleMultiSelectChange} // Updated event handler
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option value="Rn">Registered Nurse</option>
-                  <option value="cna">CNA</option>
-                  <option value="hha">Home Healthcare Assistant</option>
-                  <option value="lpn">LPN</option>
+                  <option value="rn">Registered Nurse</option>
+                  <option value="cna">Certified Nursing Assistant(CNA)</option>
+                  <option value="lpn">Licensed Practical Nurse(LPN)</option>
                 </select>
               </div>
               <div>

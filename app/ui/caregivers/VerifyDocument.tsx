@@ -21,6 +21,7 @@ interface VerifyDocumentsModalProps {
   onClose: () => void;
   documents: Document[];
   careGiverId: string;
+  onUpdateDocument: (updatedDocument: Document) => void;
 }
 
 const VerifyDocumentsModal: React.FC<VerifyDocumentsModalProps> = ({
@@ -28,6 +29,7 @@ const VerifyDocumentsModal: React.FC<VerifyDocumentsModalProps> = ({
   onClose,
   documents,
   careGiverId,
+  onUpdateDocument,
 }) => {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
     null,
@@ -45,22 +47,18 @@ const VerifyDocumentsModal: React.FC<VerifyDocumentsModalProps> = ({
   const handleVerify = async () => {
     if (selectedDocument) {
       try {
+        // Call the API and get the updated document
         const updatedDocument = await updateDocumentStatus(
           careGiverId,
           selectedDocument.documentTypeId._id,
           isVerified ? 'approved' : 'rejected',
           comment,
         );
-
+        console.log('Updated Document:', updatedDocument);
+        onUpdateDocument(updatedDocument);
+        setIsVerified(false);
+        setComment('');
         console.log('Document verified successfully:', updatedDocument);
-
-        onClose();
-        setSelectedDocument((prev) => {
-          if (prev) {
-            return { ...prev, verified: true };
-          }
-          return prev;
-        });
       } catch (error) {
         console.error('Error verifying document:', error);
       }
@@ -68,7 +66,7 @@ const VerifyDocumentsModal: React.FC<VerifyDocumentsModalProps> = ({
   };
 
   if (!isOpen) return null;
-
+  console.log('selected Document:', selectedDocument);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="flex max-h-[90%] w-4/5 rounded-lg bg-white p-5 shadow-lg">
@@ -89,8 +87,12 @@ const VerifyDocumentsModal: React.FC<VerifyDocumentsModalProps> = ({
                 >
                   <div className="flex items-center justify-between">
                     <span>{document.documentTypeId.name}</span>
-                    {document.status === 'approved' && (
+                    {document.status === 'approved' ? (
                       <FaCheckCircle className="text-green-500" />
+                    ) : document.status === 'rejected' ? (
+                      <span className="text-red-500">Rejected</span>
+                    ) : (
+                      <span className="text-yellow-500">Pending</span>
                     )}
                   </div>
                 </li>
@@ -147,9 +149,9 @@ const VerifyDocumentsModal: React.FC<VerifyDocumentsModalProps> = ({
                 >
                   Verify
                 </button>
-                <button className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700">
+                {/* <button className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700">
                   Save
-                </button>
+                </button> */}
               </div>
             </div>
           ) : (
@@ -163,7 +165,10 @@ const VerifyDocumentsModal: React.FC<VerifyDocumentsModalProps> = ({
             <h2 className="mb-4 text-lg font-semibold">Document Preview</h2>
             <button
               className="text-red-500 hover:text-red-700"
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                setSelectedDocument(null);
+              }}
             >
               Close
             </button>
@@ -181,7 +186,7 @@ const VerifyDocumentsModal: React.FC<VerifyDocumentsModalProps> = ({
                   }
                   className="mt-4 rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-600"
                 >
-                  View Fullscreen
+                  Download
                 </button>
               </div>
             </div>

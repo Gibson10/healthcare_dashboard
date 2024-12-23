@@ -189,6 +189,37 @@ export const fetchShiftsByFacility = async (
   }
 };
 
+export const fetchShiftById = async (shiftId: string): Promise<Shift> => {
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  if (!token) {
+    throw new Error('Authentication token not found. Please log in.');
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/shifts/${shiftId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (response.ok) {
+      const data: Shift = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error fetching shift by ID');
+    }
+  } catch (error) {
+    console.error('Error fetching shift by ID:', error);
+    throw error;
+  }
+};
+
 export const deleteShift = async (shiftId: string): Promise<void> => {
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') : null;

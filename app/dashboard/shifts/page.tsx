@@ -205,13 +205,24 @@ export default function Page() {
     <div className="container mx-auto p-4">
       <h2 className="mb-6 text-2xl font-semibold">Shifts</h2>
 
-      <div className="mb-4 flex justify-end">
+      <div className="group relative mb-4 flex justify-end">
         <button
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
+          className={`rounded px-4 py-2 text-white ${
+            facilities.length === 0
+              ? 'cursor-not-allowed bg-gray-400'
+              : 'bg-blue-500 hover:bg-blue-700'
+          }`}
           onClick={() => setModalIsOpen(true)}
+          disabled={facilities.length === 0} // Disable button if no facilities
         >
           + Add Shift
         </button>
+
+        {facilities.length === 0 && (
+          <div className="absolute top-full mt-2 w-64 rounded bg-gray-800 p-2 text-sm text-white opacity-0 group-hover:opacity-100">
+            You need to create facilities before adding shifts.
+          </div>
+        )}
       </div>
 
       <div className="mb-4">
