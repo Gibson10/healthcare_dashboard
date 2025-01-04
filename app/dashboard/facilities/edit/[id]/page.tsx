@@ -62,6 +62,8 @@ export default function EditFacilityPage() {
     setFacilityData((prev) => ({ ...prev, textLocation: address }));
     const results = await geocodeByAddress(address);
     const { lat, lng } = await getLatLng(results[0]);
+    console.log('lat', lat);
+    console.log('lng', lng);
     setFacilityData((prev) => ({
       ...prev,
       location: { latitude: lat, longitude: lng },

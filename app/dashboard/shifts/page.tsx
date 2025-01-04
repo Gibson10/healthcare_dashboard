@@ -65,6 +65,7 @@ export default function Page() {
         const facilitiesData = await fetchFacilities(agencyId);
         setFacilities(facilitiesData);
         const shiftsData = await fetchShifts(agencyId);
+        console.log('shiftsData', shiftsData);
         setShifts(shiftsData);
       } catch (err) {
         console.error('Error fetching data:', err);

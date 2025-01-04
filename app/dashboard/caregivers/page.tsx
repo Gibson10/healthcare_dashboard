@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Caregiver } from '@/app/api/caregivers';
-import { fetchCaregivers } from '@/app/api/caregivers';
+import { fetchCaregivers, notify } from '@/app/api/caregivers';
 import VerifyDocumentsModal from '../../ui/caregivers/VerifyDocument'; // Import the modal
 import { UploadedDocument } from '../../api/caregivers';
+import Link from 'next/link';
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<
@@ -31,6 +32,16 @@ export default function Page() {
     setIsModalOpen(true);
   };
 
+  const notifyCaregiver = async (caregiverId: string) => {
+    const message = 'Your documents have been verified';
+
+    try {
+      const response = await notify(caregiverId, message);
+      console.log('Notification response:', response); // Log success response
+    } catch (error) {
+      console.error('Error notifying caregiver:', error); // Log error
+    }
+  };
   // Function to fetch applied caregivers
   const fetchCaregiversData = async () => {
     try {
@@ -132,6 +143,11 @@ export default function Page() {
                     >
                       {activeTab === 'verify-documents' ? 'Verify' : 'View'}
                     </button>
+                    <Link href={`/dashboard/caregivers/view/${caregiver._id}`}>
+                      <button className="ml-4 text-blue-600 hover:text-blue-900">
+                        View Profile
+                      </button>
+                    </Link>
                   </td>
                 </tr>
               ))
