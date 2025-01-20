@@ -6,6 +6,11 @@ import { fetchCaregivers, notify } from '@/app/api/caregivers';
 import VerifyDocumentsModal from '../../ui/caregivers/VerifyDocument'; // Import the modal
 import { UploadedDocument } from '../../api/caregivers';
 import Link from 'next/link';
+import {
+  CheckCircleIcon,
+  EyeIcon,
+  UserIcon,
+} from '@heroicons/react/24/outline';
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<
@@ -131,23 +136,47 @@ export default function Page() {
                   <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                     {new Date(caregiver.dateJoined).toLocaleDateString()}
                   </td>
+
                   <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <button
-                      onClick={() =>
-                        handleVerifyClick(
-                          caregiver.uploadedDocuments,
-                          caregiver._id,
-                        )
-                      } // Pass documents here
-                      className="text-blue-600 hover:text-blue-900"
-                    >
-                      {activeTab === 'verify-documents' ? 'Verify' : 'View'}
-                    </button>
-                    <Link href={`/dashboard/caregivers/view/${caregiver._id}`}>
-                      <button className="ml-4 text-blue-600 hover:text-blue-900">
-                        View Profile
-                      </button>
-                    </Link>
+                    <div className="flex items-center">
+                      {/* Verify/View Button */}
+                      {activeTab === 'verify-documents' ? (
+                        <button
+                          onClick={() =>
+                            handleVerifyClick(
+                              caregiver.uploadedDocuments,
+                              caregiver._id,
+                            )
+                          }
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          <CheckCircleIcon className="h-5 w-5" />{' '}
+                          {/* Verify Icon */}
+                        </button>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() =>
+                              handleVerifyClick(
+                                caregiver.uploadedDocuments,
+                                caregiver._id,
+                              )
+                            }
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            <EyeIcon className="h-5 w-5" /> {/* View Icon */}
+                          </button>
+                          <Link
+                            href={`/dashboard/caregivers/view/${caregiver._id}`}
+                          >
+                            <button className="ml-4 text-blue-600 hover:text-blue-900">
+                              <UserIcon className="h-5 w-5" />{' '}
+                              {/* View Profile Icon */}
+                            </button>
+                          </Link>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))

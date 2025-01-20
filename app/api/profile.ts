@@ -48,3 +48,33 @@ export const fetchAgencyProfile = async (agencyId: string) => {
     throw error;
   }
 };
+
+export const updateLogo = async (id: string, logoFile: File) => {
+  const token = localStorage.getItem('token'); // Retrieve the Bearer token from localStorage
+  console.log('logoFile', logoFile);
+  console.log('id', id);
+  const formData = new FormData();
+  formData.append('file', logoFile); // Append the logo file to the FormData
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/agencies/${id}/logo`, // Assuming you have a separate endpoint for logo update
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach the Bearer token in the request header
+        },
+        body: formData, // Use FormData to send the file
+      },
+    );
+
+    if (response.ok) {
+      return await response.json(); // Return the updated logo URL or confirmation data
+    } else {
+      throw new Error('Error updating logo');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};

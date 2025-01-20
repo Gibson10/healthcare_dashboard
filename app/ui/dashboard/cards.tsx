@@ -1,58 +1,76 @@
-import {
-  BanknotesIcon,
-  ClockIcon,
-  UserGroupIcon,
-  InboxIcon,
-} from '@heroicons/react/24/outline';
-import { lusitana } from '@/app/ui/fonts';
+import React, { ReactNode } from 'react';
 
-const iconMap = {
-  collected: BanknotesIcon,
-  customers: UserGroupIcon,
-  pending: ClockIcon,
-  invoices: InboxIcon,
-};
-
-export default async function CardWrapper() {
-  return (
-    <>
-      {/* NOTE: comment in this code when you get to this point in the course */}
-
-      {/* <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Pending" value={totalPendingInvoices} type="pending" />
-      <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
-      <Card
-        title="Total Customers"
-        value={numberOfCustomers}
-        type="customers"
-      /> */}
-    </>
-  );
+interface CardProps {
+  title: string;
+  total: string | number;
+  rate: string;
+  levelUp?: boolean;
+  levelDown?: boolean;
+  icon: ReactNode; // Icon is passed as a prop
 }
 
-export function Card({
+const Card: React.FC<CardProps> = ({
   title,
-  value,
-  type,
-}: {
-  title: string;
-  value: number | string;
-  type: 'invoices' | 'customers' | 'pending' | 'collected';
-}) {
-  const Icon = iconMap[type];
-
+  total,
+  rate,
+  levelUp,
+  levelDown,
+  icon,
+}) => {
   return (
-    <div className="rounded-xl bg-gray-50 p-2 shadow-sm">
-      <div className="flex p-4">
-        {Icon ? <Icon className="h-5 w-5 text-gray-700" /> : null}
-        <h3 className="ml-2 text-sm font-medium">{title}</h3>
+    <div className="border-stroke px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark rounded-sm border bg-white py-6">
+      <div className="h-11.5 w-11.5 bg-meta-2 dark:bg-meta-4 flex items-center justify-center rounded-full">
+        {icon} {/* Render the icon dynamically */}
       </div>
-      <p
-        className={`${lusitana.className}
-          truncate rounded-xl bg-white px-4 py-8 text-center text-2xl`}
-      >
-        {value}
-      </p>
+
+      <div className="mt-4 flex items-end justify-between">
+        <div>
+          <h4 className="text-title-md ml-3 font-bold text-black dark:text-white">
+            {total}
+          </h4>
+          <span className="text-sm font-medium">{title}</span>
+        </div>
+
+        <span
+          className={`flex items-center gap-1 text-sm font-medium ${
+            levelUp && 'text-meta-3'
+          } ${levelDown && 'text-meta-5'}`}
+        >
+          {rate}
+          {levelUp && (
+            <svg
+              className="fill-meta-3"
+              width="10"
+              height="11"
+              viewBox="0 0 10 11"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.35716 2.47737L0.908974 5.82987L5.0443e-07 4.94612L5 0.0848689L10 4.94612L9.09103 5.82987L5.64284 2.47737L5.64284 10.0849L4.35716 10.0849L4.35716 2.47737Z"
+                fill=""
+              />
+            </svg>
+          )}
+          {levelDown && (
+            <svg
+              className="fill-meta-5"
+              width="10"
+              height="11"
+              viewBox="0 0 10 11"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5.64284 7.69237L9.09102 4.33987L10 5.22362L5 10.0849L-8.98488e-07 5.22362L0.908973 4.33987L4.35716 7.69237L4.35716 0.0848701L5.64284 0.0848704L5.64284 7.69237Z"
+                fill=""
+              />
+            </svg>
+          )}
+        </span>
+      </div>
     </div>
   );
-}
+};
+
+export default Card;

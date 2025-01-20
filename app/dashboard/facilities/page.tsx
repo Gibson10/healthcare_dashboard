@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { fetchFacilities, deleteFacility } from '../../api/facilities'; // Import your fetch function
 import DeleteModal from '@/app/ui/modals/DeleteModal';
 import { toast, ToastContainer } from 'react-toastify';
-
+import { PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 export default function Page() {
   const [facilities, setFacilities] = useState<any[]>([]); // State to store fetched facilities
   const [loading, setLoading] = useState<boolean>(true); // State for loading status
@@ -156,18 +156,18 @@ export default function Page() {
                 <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                   <Link href={`/dashboard/facilities/edit/${facility._id}`}>
                     <button className="mr-2 text-blue-600 hover:text-blue-900">
-                      Edit
+                      <PencilIcon className="h-5 w-5" /> {/* Edit Icon */}
                     </button>
                   </Link>
                   <button
                     onClick={() => handleOpenDeleteModal(facility._id)}
                     className="text-red-600 hover:text-red-900"
                   >
-                    Delete
+                    <TrashIcon className="h-5 w-5" /> {/* Delete Icon */}
                   </button>
                   <Link href={`/dashboard/facilities/view/${facility._id}`}>
                     <button className="ml-3 text-blue-600 hover:text-blue-900">
-                      View
+                      <EyeIcon className="h-5 w-5" /> {/* View Icon */}
                     </button>
                   </Link>
                 </td>

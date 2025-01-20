@@ -35,7 +35,6 @@ const links = [
     href: '/dashboard/caregivers',
     icon: IdentificationIcon,
   },
-  // { name: 'USER PROFILE', href: '/dashboard/profile', icon: UserIcon },
   // {
   //   name: 'USER MANAGEMENT',
   //   href: '/dashboard/usermanagement',
@@ -47,6 +46,7 @@ const links = [
     icon: DocumentCheckIcon,
   },
   { name: 'REPORTS', href: '/dashboard/reports', icon: ChartBarIcon },
+  { name: 'USER PROFILE', href: '/dashboard/profile', icon: UserIcon },
 ];
 
 export default function NavLinks() {

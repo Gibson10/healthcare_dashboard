@@ -5,6 +5,7 @@ import { Shift, deleteShift } from '../../api/shifts';
 import DeleteModal from '../modals/DeleteModal';
 import { toast, ToastContainer } from 'react-toastify';
 import Link from 'next/link';
+import { PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 
 type Facility = {
   _id: string;
@@ -140,7 +141,7 @@ const ShiftsTable: React.FC<ShiftsTableProps> = ({
                 />
                 <span>{shift.facilityId?.name}</span>
               </td>
-              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm font-bold">
                 {new Date(shift.date).toLocaleDateString()}{' '}
                 {new Date(shift.startTime).toLocaleTimeString([], {
                   hour: '2-digit',
@@ -196,18 +197,18 @@ const ShiftsTable: React.FC<ShiftsTableProps> = ({
                   onClick={() => handleEditShift(shift)}
                   className="mr-2 text-blue-600 hover:text-blue-900"
                 >
-                  Edit
+                  <PencilIcon className="h-5 w-5" /> {/* Edit Icon */}
                 </button>
                 <Link href={`/dashboard/shifts/view/${shift._id}`}>
                   <button className="ml-2 text-blue-600 hover:text-blue-900">
-                    View
+                    <EyeIcon className="h-5 w-5" /> {/* View Icon */}
                   </button>
                 </Link>
                 <button
                   onClick={() => handleOpenDeleteModal(shift._id)}
                   className="ml-4 text-red-600 hover:text-red-900"
                 >
-                  Delete
+                  <TrashIcon className="h-5 w-5" /> {/* Delete Icon */}
                 </button>
               </td>
             </tr>

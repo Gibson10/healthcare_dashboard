@@ -7,6 +7,8 @@ import EditShiftModal from '../../ui/shifts/EditShifts';
 import ViewShiftDetailsModal from '../../ui/shifts/ViewShiftModelDetails';
 import { toast, ToastContainer } from 'react-toastify';
 import ShiftsTable from '@/app/ui/shifts/ShiftsTable';
+import { TableCellsIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import CalendarView from '@/app/ui/shifts//CalendarView'; // Import the Calendar component
 
 type NursePayRate = {
   nurseType: string;
@@ -43,6 +45,7 @@ export default function Page() {
     basePrice: 0,
     basePriceByNurseType: [], // Array of { nurseType, payRate }
   });
+  const [activeView, setActiveView] = useState('table'); // Added state for active view
 
   const [shiftDetails, setShiftDetails] = useState({
     shiftTitle: '',
@@ -75,6 +78,10 @@ export default function Page() {
     getFacilitiesAndShifts();
   }, []);
 
+  // Toggle between table view and calendar view
+  const handleToggleView = () => {
+    setActiveView(activeView === 'table' ? 'calendar' : 'table');
+  };
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
@@ -194,11 +201,17 @@ export default function Page() {
     }
 
     return (
-      <ShiftsTable
-        shifts={shifts}
-        facilities={facilities}
-        onReload={() => window.location.reload()}
-      />
+      <>
+        {activeView === 'table' ? (
+          <ShiftsTable
+            shifts={shifts}
+            facilities={facilities}
+            onReload={() => window.location.reload()}
+          />
+        ) : (
+          <CalendarView shifts={shifts} />
+        )}
+      </>
     );
   };
 
@@ -225,7 +238,6 @@ export default function Page() {
           </div>
         )}
       </div>
-
       <div className="mb-4">
         <ul className="flex border-b">
           <li className="-mb-px mr-1">
@@ -264,6 +276,23 @@ export default function Page() {
               Shifts with Cancellations
             </button>
           </li>
+
+          {/* Align the icons to the right */}
+          <div className="ml-auto flex items-center space-x-2">
+            <button
+              onClick={() => handleToggleView()} // Switch to Table View
+              className="rounded-full p-2 text-blue-500 hover:bg-gray-200"
+            >
+              <TableCellsIcon className="h-5 w-5" />
+            </button>
+
+            <button
+              onClick={() => handleToggleView()} // Switch to Calendar View
+              className="rounded-full p-2 text-blue-500 hover:bg-gray-200"
+            >
+              <CalendarIcon className="h-5 w-5" />
+            </button>
+          </div>
         </ul>
       </div>
 

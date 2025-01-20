@@ -2,6 +2,8 @@
 
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'; // For the SVG image
+import Link from 'next/link'; // For the signup link
 import { registerAgencyAdmin } from '../../api/auth';
 
 interface AgencyInfo {
@@ -24,8 +26,13 @@ export default function RegisterAgencyPage() {
   const router = useRouter();
 
   // Retrieve personal information from local storage
-  // const personalInfo = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-  //
+  useEffect(() => {
+    const storedPersonalInfo = localStorage.getItem('personalInfo');
+    if (storedPersonalInfo) {
+      setPersonalInfo(JSON.parse(storedPersonalInfo));
+    }
+  }, []);
+
   // Handle form input changes
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setAgencyInfo({
@@ -40,7 +47,8 @@ export default function RegisterAgencyPage() {
 
     const formData = { ...personalInfo, ...agencyInfo }; // Combine personal and agency info
     try {
-      const data = await registerAgencyAdmin(formData); // Call the centralized registration function
+      // Call the centralized registration function
+      const data = await registerAgencyAdmin(formData);
       console.log('Registration successful:', data);
       localStorage.setItem('agencyId', data.agencyId); // Store the agencyId
       router.push('/'); // Redirect to the login page after successful registration
@@ -49,105 +57,131 @@ export default function RegisterAgencyPage() {
     }
   };
 
-  useEffect(() => {
-    const storedPersonalInfo = localStorage.getItem('personalInfo');
-    if (storedPersonalInfo) {
-      setPersonalInfo(JSON.parse(storedPersonalInfo));
-    }
-  }, []);
-
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
-      <div className="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
-        <a
-          href="#"
-          className="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white"
-        >
-          Omni Healthcare Management
-        </a>
-        <div className="w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
-          <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Agency Information
-            </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                  Agency name
-                </label>
-                <input
-                  type="text"
-                  name="agencyName"
-                  id="agencyName"
-                  value={agencyInfo.agencyName}
-                  onChange={handleChange}
-                  className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="Agency Name"
-                  required
+    <section className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="w-full rounded-sm bg-white shadow-lg xl:max-w-4xl dark:border-strokedark dark:bg-boxdark">
+        <div className="flex flex-wrap items-center">
+          {/* Left Side with Image */}
+          <div className="hidden w-full xl:block xl:w-1/2">
+            <div className="px-12 py-16 text-center">
+              <Link className="mb-5.5 inline-block" href="/">
+                <Image
+                  className=" dark:block"
+                  src={'/images/auth.svg'}
+                  alt="Auth Image"
+                  width={176}
+                  height={32}
                 />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                  Agency email
-                </label>
-                <input
-                  type="email"
-                  name="agencyEmail"
-                  id="agencyEmail"
-                  value={agencyInfo.agencyEmail}
-                  onChange={handleChange}
-                  className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="agency@company.com"
-                  required
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                  Agency phone number
-                </label>
-                <input
-                  type="tel"
-                  name="agencyPhone"
-                  id="agencyPhone"
-                  value={agencyInfo.agencyPhone}
-                  onChange={handleChange}
-                  className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="+9876543210"
-                  required
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                  Agency address
-                </label>
-                <input
-                  type="text"
-                  name="agencyAddress"
-                  id="agencyAddress"
-                  value={agencyInfo.agencyAddress}
-                  onChange={handleChange}
-                  className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="123 Main Street"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="hover:bg-primary-700 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4"
-              >
-                Register
-              </button>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Already have an account?{' '}
-                <a
-                  href="#"
-                  className="text-primary-600 dark:text-primary-500 font-medium hover:underline"
-                >
-                  Sign in
-                </a>
+              </Link>
+              <p className="mt-6 text-lg">
+                We help manage nurse staffing, shift management, and payments to
+                ensure smooth operations and efficient workforce management in
+                healthcare facilities.
               </p>
-            </form>
+            </div>
+          </div>
+
+          {/* Right Side with Form */}
+          <div className="w-full xl:w-1/2 xl:border-l-2 xl:border-stroke dark:border-strokedark">
+            <div className="w-full p-8 sm:p-12">
+              <span className="mb-1.5 block font-medium">Step 2</span>
+              <h2 className="mb-9 text-2xl font-bold text-black sm:text-title-xl2 dark:text-white">
+                Agency Information
+              </h2>
+
+              <form onSubmit={handleSubmit}>
+                {/* Agency Name Field */}
+                <div className="mb-4">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Agency Name
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="agencyName"
+                      placeholder="Agency Name"
+                      value={agencyInfo.agencyName}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Agency Email Field */}
+                <div className="mb-4">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Agency Email
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="email"
+                      name="agencyEmail"
+                      placeholder="agency@company.com"
+                      value={agencyInfo.agencyEmail}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Agency Phone Field */}
+                <div className="mb-4">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Agency Phone Number
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      name="agencyPhone"
+                      placeholder="+9876543210"
+                      value={agencyInfo.agencyPhone}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Agency Address Field */}
+                <div className="mb-4">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Agency Address
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="agencyAddress"
+                      placeholder="123 Main Street"
+                      value={agencyInfo.agencyAddress}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                >
+                  Register
+                </button>
+
+                {/* Sign In Link */}
+                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                  Already have an account?{' '}
+                  <Link
+                    href="/"
+                    className="text-primary-600 dark:text-primary-500 font-medium hover:underline"
+                  >
+                    Sign in
+                  </Link>
+                </p>
+              </form>
+            </div>
           </div>
         </div>
       </div>
